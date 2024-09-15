@@ -58,9 +58,11 @@ def get_score(chunks):
     return rounded_result
 
 def check_if_keywords_present(online_content, keyword_list):
+    online_content_lower = online_content.lower()
     keywords = {}
 
     for k in keyword_list:
-        keywords[k] = keywords.get(k, 0) + online_content.count(k)
+        k_lower = k.lower()
+        keywords[k] = keywords.get(k, 0) + online_content_lower.count(k_lower)
 
     return keywords

@@ -2,6 +2,7 @@
     "manifest_version": 3,
     "name": "Canary",
     "version": "1.0",
+    "description": "Reads through websites to look for danger!",
     "permissions": ["activeTab", "storage", "tabs", "scripting", "webNavigation"],
     "background": {
         "service_worker": "background.js"

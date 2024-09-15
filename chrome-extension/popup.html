@@ -3,71 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keyword Blocker</title>
+  <title>Canary</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      width: 250px;
-      padding: 10px;
+      font-family: Verdana, Geneva, sans-serif; /* Change the font-family to Comic Sans */
+      width: 275px;
+      padding: 20px;
       text-align: center;
       background-color: #1f1f1f;
       color: #FFDE21;
+      /*border-radius: 15px;*/
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      border-width: 2px;
+      border-color: rgb(255, 223, 80);
+      border-style: solid;
+      box-sizing: border-box;
     }
+
+    .switch-box {
+      background-color: #1f1f1f;
+      border-radius: 0px;
+      padding: 0px;
+      width: 100%; /* Ensure both boxes have the same width */
+      margin-bottom: 0px;
+      text-align: center;
+    }
+
+    .keyword-box {
+      background-color: #33312c;
+      border-radius: 15px;
+      padding: 15px;
+      width: 80%; /* Ensure the keyword-box takes full width available */
+      margin-top: 15px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
+      text-align: center;
+    }
+
+    .keyword-box h3 {
+      margin-top: 0px; /* Adjust this value to control space above the header */
+      margin-bottom: 15px; /* Optional: adjust the space below the header if needed */
+    }
+
     input[type="text"] {
-      width: 80%;
+      width: calc(100% - 12px); /* Adjust width to fit inside the keyword-box, accounting for padding */
       padding: 5px;
       box-sizing: border-box;
       border-radius: 15px;
       border: 1px solid #FFDE21;
     }
+
     button {
+      font-family: Verdana, Geneva, sans-serif;
       margin-top: 10px;
+      margin-bottom: 7px;
       padding: 5px;
-      width: 80%;
-      background-color: #FFDE21;
+      width: calc(100% - 12px); /* Adjust width to fit inside the keyword-box, accounting for padding */
+      background: linear-gradient(to right, #fff465, #ff7f1f); /* Use 'background' instead of 'background-color' for gradient */
       color: black;
       border: none;
       border-radius: 15px;
       cursor: pointer;
     }
+
     ul {
       list-style-type: none;
       padding: 0;
-      text-align: left;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap; /* Allows items to wrap to the next line */
+      justify-content: center; /* Center items horizontally */
     }
+
     ul li {
-      margin: 5px 0;
+      margin: 5px;
       position: relative;
-      padding-right: 25px;
-      display: block;
+      padding-right: 10px;
+      padding-bottom: 5px;
+      display: inline-flex; /* Allows items to align in rows */
+      align-items: center; /* Center content vertically */
     }
+
     .remove-btn {
-      position: absolute;
-      right: 0;
+      position: center;
       top: 50%;
       transform: translateY(-50%);
       color: #FFDE21;
       font-weight: bold;
       cursor: pointer;
-      /* Removed display: none to make the "x" button always visible */
     }
-    /* Removed hover effect since the "x" button is always visible */
-    .toggle-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .toggle-label {
-      font-size: 14px;
-      margin-right: 10px;
-      color: #FFDE21;
-    }
+
     .switch-container {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
+      justify-content: center; /* Center switches horizontally */
     }
+
     .switch {
       position: relative;
       display: inline-block;
@@ -75,11 +112,13 @@
       height: 24px;
       border-radius: 24px;
     }
+
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
+
     .slider {
       position: absolute;
       cursor: pointer;
@@ -91,6 +130,7 @@
       transition: 0.4s;
       border-radius: 24px;
     }
+
     .slider:before {
       position: absolute;
       content: "";
@@ -102,75 +142,54 @@
       transition: 0.4s;
       border-radius: 50%;
     }
+
+    input[type="text"] {
+      font-family: Verdana, Geneva, sans-serif;
+      width: calc(100% - 12px); /* Adjust width to fit inside the keyword-box, accounting for padding */
+      padding: 5px;
+      box-sizing: border-box;
+      border-radius: 15px;
+      border: 1px solid #FFDE21;
+    }
+
     input[type="checkbox"]:checked + .slider {
       background-color: #FFDE21;
     }
+
     input[type="checkbox"]:focus + .slider {
       box-shadow: 0 0 1px #FFDE21;
     }
+
     input[type="checkbox"]:checked + .slider:before {
       transform: translateX(26px);
     }
   </style>
 </head>
 <body>
+  <img src="canary_full_grey.png" alt="Canary" width=80% height=10% >
   <!-- Toggle switches container -->
   <div class="toggle-container">
-    <!-- Content Warning Switch -->
-    <div class="switch-container">
-      <span class="toggle-label">Content Warning</span>
-      <label class="switch">
-        <input type="checkbox" id="contentWarningToggle">
-        <span class="slider"></span>
-      </label>
+    <!-- Box for Content Warning Switch -->
+    <div class="switch-box">
+      <div class="switch-container" style="margin-bottom: 15px">
+        <span class="toggle-label"><b>Content Warning</b></span>
+        <label class="switch" style="margin-left: 7px">
+          <input type="checkbox" id="contentWarningToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
 
-    <!-- Keyword Warning Switch -->
-    <div class="switch-container">
-      <span class="toggle-label">Keyword Warning</span>
-      <label class="switch">
-        <input type="checkbox" id="keywordWarningToggle">
-        <span class="slider"></span>
-      </label>
-    </div>
+  <!-- Box for block keywords and add keyword section -->
+  <div class="keyword-box">
+    <h3>Block Keywords</h3>
+    <ul id="keywordList">
+    </ul>
+  
+    <input type="text" id="newKeyword" placeholder="Add keyword" />
+    <button id="addBtn">Add Keyword</button>
   </div>
 
-  <h3>Block Keywords</h3>
-  <ul id="keywordList">
-    <li>Test <span class="remove-btn">x</span></li>
-    <li>Cool <span class="remove-btn">x</span></li>
-  </ul>
-  
-  <input type="text" id="newKeyword" placeholder="Add keyword" />
-  <button id="addBtn">Add Keyword</button>
-
-  <script>
-    // Function to remove a keyword
-    function removeKeyword(element) {
-      var listItem = element.closest('li');
-      if (listItem) {
-        listItem.remove();
-      }
-    }
-
-    // Event listener for the "x" buttons
-    document.getElementById('keywordList').addEventListener('click', function(event) {
-      if (event.target && event.target.classList.contains('remove-btn')) {
-        removeKeyword(event.target);
-      }
-    });
-
-    // Add functionality for adding new keywords
-    document.getElementById('addBtn').addEventListener('click', function() {
-      var newKeyword = document.getElementById('newKeyword').value.trim();
-      if (newKeyword) {
-        var keywordList = document.getElementById('keywordList');
-        var newLi = document.createElement('li');
-        newLi.innerHTML = newKeyword + ' <span class="remove-btn">x</span>';
-        keywordList.appendChild(newLi);
-        document.getElementById('newKeyword').value = ''; // Clear input
-      }
-    });
-  </script>
+  <script src="popup.js"></script>
 </body>
 </html>

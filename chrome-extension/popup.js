@@ -1,66 +1,87 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Load blocked keywords and toggle states on popup open
-    chrome.storage.sync.get(['blockedKeywords', 'contentWarningActive', 'keywordWarningActive'], function(data) {
+    chrome.storage.sync.get(['blockedKeywords', 'contentWarningActive'], function(data) {
         const keywords = data.blockedKeywords || [];
+        const contentWarningActive = data.contentWarningActive || false;
+
         updateKeywordList(keywords);
-        
-        const contentWarningToggle = document.getElementById('contentWarningToggle');
-        const keywordWarningToggle = document.getElementById('keywordWarningToggle');
 
-        // Set the toggle states based on the stored values
-        contentWarningToggle.checked = data.contentWarningActive || false;
-        keywordWarningToggle.checked = data.keywordWarningActive || false;
+        // Set the toggle switch states based on stored values
+        document.getElementById('contentWarningToggle').checked = contentWarningActive;
+    });
 
-        // Add new keyword when the button is clicked
-        document.getElementById('addBtn').addEventListener('click', function() {
-            const newKeyword = document.getElementById('newKeyword').value.trim();
-            
-            if (newKeyword) {
-                chrome.storage.sync.get('blockedKeywords', function(data) {
-                    const keywords = data.blockedKeywords || [];
-                    keywords.push(newKeyword);
+    // Add new keyword when the button is clicked
+    document.getElementById('addBtn').addEventListener('click', function() {
+        const newKeyword = document.getElementById('newKeyword').value.trim();
 
-                    chrome.storage.sync.set({
-                        blockedKeywords: keywords,
-                        contentWarningActive: contentWarningToggle.checked,
-                        keywordWarningActive: keywordWarningToggle.checked
-                    }, function() {
-                        updateKeywordList(keywords); // Update the UI
-                        document.getElementById('newKeyword').value = ''; // Clear input
+        if (newKeyword) {
+            chrome.storage.sync.get('blockedKeywords', function(data) {
+                const keywords = data.blockedKeywords || [];
+                keywords.push(newKeyword);
 
-                        // Send updated keywords and toggle states to background script
-                        chrome.runtime.sendMessage({
-                            action: 'updateKeywords',
-                            keywords: keywords,
-                            contentWarningActive: contentWarningToggle.checked,
-                            keywordWarningActive: keywordWarningToggle.checked
-                        }, function(response) {
-                            console.log('Message sent to background script:', response);
-                        });
+                chrome.storage.sync.set({ blockedKeywords: keywords }, function() {
+                    updateKeywordList(keywords); // Update the UI
+                    document.getElementById('newKeyword').value = ''; // Clear input
+
+                    // Send updated keywords to background script
+                    chrome.runtime.sendMessage({
+                        action: 'updateKeywords',
+                        keywords: keywords
+                    }, function(response) {
+                        console.log('Message sent to background script:', response);
                     });
                 });
-            }
-        });
+            });
+        }
+    });
 
-        // Save the toggle states when they change
-        contentWarningToggle.addEventListener('change', function() {
-            chrome.storage.sync.set({ contentWarningActive: contentWarningToggle.checked });
-        });
-
-        keywordWarningToggle.addEventListener('change', function() {
-            chrome.storage.sync.set({ keywordWarningActive: keywordWarningToggle.checked });
+    // Add event listeners to save toggle states
+    document.getElementById('contentWarningToggle').addEventListener('change', function() {
+        const contentWarningActive = this.checked;
+        chrome.storage.sync.set({ contentWarningActive: contentWarningActive }, function() {
+            console.log('Content Warning Toggle state saved:', contentWarningActive);
         });
     });
 });
 
-// Update the keyword list in the popup
 function updateKeywordList(keywords) {
     const keywordList = document.getElementById('keywordList');
     keywordList.innerHTML = '';
 
     keywords.forEach(keyword => {
         const li = document.createElement('li');
-        li.textContent = keyword;
+        li.innerHTML = keyword + ' <span class="remove-btn">x</span>'; // Add the "x" button
         keywordList.appendChild(li);
     });
+
+    // Reattach event listener for dynamically added "x" buttons
+    document.getElementById('keywordList').addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('remove-btn')) {
+            removeKeyword(event.target);
+        }
+    });
+}
+
+function removeKeyword(element) {
+    const listItem = element.closest('li');
+    if (listItem) {
+        const keyword = listItem.textContent.replace(' x', '').trim();
+
+        chrome.storage.sync.get('blockedKeywords', function(data) {
+            const keywords = data.blockedKeywords || [];
+            const index = keywords.indexOf(keyword);
+            if (index !== -1) {
+                keywords.splice(index, 1);
+                chrome.storage.sync.set({ blockedKeywords: keywords }, function() {
+                    updateKeywordList(keywords); // Update the UI
+                    chrome.runtime.sendMessage({
+                        action: 'updateKeywords',
+                        keywords: keywords
+                    }, function(response) {
+                        console.log('Message sent to background script:', response);
+                    });
+                });
+            }
+        });
+    }
 }
