@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyword Blocker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 250px;
+      padding: 10px;
+      text-align: center;
+      background-color: #1f1f1f;
+      color: #FFDE21;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 5px;
+      box-sizing: border-box;
+      border-radius: 15px;
+      border: 1px solid #FFDE21;
+    }
+    button {
+      margin-top: 10px;
+      padding: 5px;
+      width: 80%;
+      background-color: #FFDE21;
+      color: black;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      text-align: left;
+    }
+    ul li {
+      margin: 5px 0;
+      position: relative;
+      padding-right: 25px;
+      display: block;
+    }
+    .remove-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FFDE21;
+      font-weight: bold;
+      cursor: pointer;
+      /* Removed display: none to make the "x" button always visible */
+    }
+    /* Removed hover effect since the "x" button is always visible */
+    .toggle-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .toggle-label {
+      font-size: 14px;
+      margin-right: 10px;
+      color: #FFDE21;
+    }
+    .switch-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      border-radius: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input[type="checkbox"]:checked + .slider {
+      background-color: #FFDE21;
+    }
+    input[type="checkbox"]:focus + .slider {
+      box-shadow: 0 0 1px #FFDE21;
+    }
+    input[type="checkbox"]:checked + .slider:before {
+      transform: translateX(26px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Toggle switches container -->
+  <div class="toggle-container">
+    <!-- Content Warning Switch -->
+    <div class="switch-container">
+      <span class="toggle-label">Content Warning</span>
+      <label class="switch">
+        <input type="checkbox" id="contentWarningToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Keyword Warning Switch -->
+    <div class="switch-container">
+      <span class="toggle-label">Keyword Warning</span>
+      <label class="switch">
+        <input type="checkbox" id="keywordWarningToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <h3>Block Keywords</h3>
+  <ul id="keywordList">
+    <li>Test <span class="remove-btn">x</span></li>
+    <li>Cool <span class="remove-btn">x</span></li>
+  </ul>
+  
+  <input type="text" id="newKeyword" placeholder="Add keyword" />
+  <button id="addBtn">Add Keyword</button>
+
+  <script>
+    // Function to remove a keyword
+    function removeKeyword(element) {
+      var listItem = element.closest('li');
+      if (listItem) {
+        listItem.remove();
+      }
+    }
+
+    // Event listener for the "x" buttons
+    document.getElementById('keywordList').addEventListener('click', function(event) {
+      if (event.target && event.target.classList.contains('remove-btn')) {
+        removeKeyword(event.target);
+      }
+    });
+
+    // Add functionality for adding new keywords
+    document.getElementById('addBtn').addEventListener('click', function() {
+      var newKeyword = document.getElementById('newKeyword').value.trim();
+      if (newKeyword) {
+        var keywordList = document.getElementById('keywordList');
+        var newLi = document.createElement('li');
+        newLi.innerHTML = newKeyword + ' <span class="remove-btn">x</span>';
+        keywordList.appendChild(newLi);
+        document.getElementById('newKeyword').value = ''; // Clear input
+      }
+    });
+  </script>
+</body>
+</html>

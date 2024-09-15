@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Canary",
+    "version": "1.0",
+    "permissions": ["activeTab", "storage", "tabs", "scripting", "webNavigation"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "canary16.png",
+        "48": "canary48.png",
+        "128": "canary128.png"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ]    
+}

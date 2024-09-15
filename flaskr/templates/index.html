@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword Blocker</title>
+</head>
+<body>
+    <h1>Content Blocker</h1>
+    <p>Enter keywords to block (comma-separated):</p>
+    <input type="text" id="keywords" placeholder="e.g., politics, ads" value="{{ ', '.join(keywords) }}">
+    <button onclick="saveKeywords()">Save</button>
+
+    <script>
+        function saveKeywords() {
+            let keywords = document.getElementById('keywords').value;
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'keywords=' + encodeURIComponent(keywords)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Keywords saved successfully!');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
