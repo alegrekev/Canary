@@ -30,7 +30,7 @@ def scale_value(value):
     if value < 0.01:
         transformed_value = math.pow(value, 0.5)
         result = transformed_value * 10
-    elif (value > 0.01) and (value < 0.8):
+    elif (value > 0.01) and (value < 0.05):
         transformed_value = math.pow(value, 0.05)
         result = transformed_value * 10
     else:
